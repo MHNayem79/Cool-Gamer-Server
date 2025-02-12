@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -27,8 +27,52 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const reviewCollection = client.db("reviewDB").collection("review");
+        const WatchListCollection = client.db("reviewDB").collection("watchList");
 
-        
+        // added review showing to the clint side on all reviews
+
+        app.get("/addReview", async (req, res) => {
+            const cursor = reviewCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // reviews details all data showing to the clint side details page
+
+        app.get("/review/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reviewCollection.findOne(query);
+            res.send(result);
+        })
+
+        // showing data to the clint side on my Wishlist by clicking on add to Wishlist
+
+        app.get("/gameWishList", async (req, res) => {
+            const cursor = WatchListCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
+        // addedReviews data sending to the database
+
+        app.post("/addReview", async (req, res) => {
+            const addedReviews = req.body;
+            console.log(addedReviews)
+            const result = await reviewCollection.insertOne(addedReviews)
+            res.send(result)
+        })
+
+
+        // WatchList data sending to the database
+
+        app.post("/review/:id", async (req, res) => {
+            const detailsCollections = req.body;
+            console.log(detailsCollections);
+            const result = await WatchListCollection.insertOne(detailsCollections);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
