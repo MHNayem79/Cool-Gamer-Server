@@ -38,7 +38,13 @@ async function run() {
             res.send(result);
         })
 
-        // reviews details all data showing to the clint side details page
+        app.get("/highest", async (req, res) => {
+            const cursor = reviewCollection.find().limit(6);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // reviews details data showing to the clint side details page
 
         app.get("/review/:id", async (req, res) => {
             const id = req.params.id;
@@ -49,11 +55,21 @@ async function run() {
 
         // showing data to the clint side on my Wishlist by clicking on add to Wishlist
 
-        app.get("/gameWishList", async (req, res) => {
-            const cursor = WatchListCollection.find();
-            const result = await cursor.toArray();
-            res.send(result)
-        })
+        app.get("/gameWishList/:userEmail", async (req, res) => {
+            const userEmail = req.params.userEmail;
+            const query = { userEmail: userEmail }; // Filtering by userEmail
+            const result = await WatchListCollection.find(query).toArray(); // Retrieve all matching reviews
+            res.send(result);
+        });
+
+        // my reviews
+
+        app.get("/myReviews/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }; // Filtering by userEmail
+            const result = await reviewCollection.find(query).toArray(); // Retrieve all matching reviews
+            res.send(result);
+        });
 
         // addedReviews data sending to the database
 
