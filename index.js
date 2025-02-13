@@ -38,11 +38,11 @@ async function run() {
             res.send(result);
         })
 
-        // app.get("/highest", async (req, res) => {
-        //     const cursor = reviewCollection.find().limit(6);
-        //     const result = await cursor.toArray();
-        //     res.send(result);
-        // })
+        app.get("/highest", async (req, res) => {
+            const cursor = reviewCollection.find().limit(6);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
         // reviews details data showing to the clint side details page
 
