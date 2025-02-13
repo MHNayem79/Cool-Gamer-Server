@@ -30,7 +30,7 @@ async function run() {
         const reviewCollection = client.db("reviewDB").collection("review");
         const WatchListCollection = client.db("reviewDB").collection("watchList");
 
-        // added review showing to the clint side on all reviews
+        // added review showing to the clint side on all reviews part
 
         app.get("/addReview", async (req, res) => {
             const cursor = reviewCollection.find();
@@ -38,11 +38,11 @@ async function run() {
             res.send(result);
         })
 
-        app.get("/highest", async (req, res) => {
-            const cursor = reviewCollection.find().limit(6);
-            const result = await cursor.toArray();
-            res.send(result);
-        })
+        // app.get("/highest", async (req, res) => {
+        //     const cursor = reviewCollection.find().limit(6);
+        //     const result = await cursor.toArray();
+        //     res.send(result);
+        // })
 
         // reviews details data showing to the clint side details page
 
