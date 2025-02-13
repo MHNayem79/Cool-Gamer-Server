@@ -71,12 +71,46 @@ async function run() {
             res.send(result);
         });
 
+        // delete data from my review
+
         app.delete("/myReviews/:id", async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
             const result = await reviewCollection.deleteOne(query)
             res.send(result);
         })
+
+        // get data from review collection to server for updateReview section
+
+        app.get('/updateReview/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reviewCollection.findOne(query)
+            res.send(result);
+        })
+
+        // put updated data to the database
+
+        app.put("/updateReview/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updateReview = req.body;
+            const review = {
+                $set: {
+                    photo: updateReview.photo,
+                    gameTitle: updateReview.gameTitle,
+                    description: updateReview.description,
+                    rating: updateReview.rating,
+                    published: updateReview.published,
+                    genres: updateReview.genres
+                }
+            }
+
+            const result = await reviewCollection.updateOne(filter, review, options)
+            res.send(result);
+        })
+
 
         // addedReviews data sending to the database
 
